@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Scan History{% endblock %}
+{% block content %}
+<section class="container page">
+  <h1 class="page-title">Scan History</h1>
+  {% if not rows %}
+  <div class="panel text-center py-5">
+    <i class="bi bi-journal-plus empty-icon"></i>
+    <h2 class="h5">No scans yet</h2>
+    <p class="text-muted-cv">Scans you complete will be saved here so you can look back at them.</p>
+    <a class="btn btn-cv" href="{{ url_for('detect') }}">Scan your first plant</a>
+  </div>
+  {% else %}
+  <div class="table-responsive panel p-0">
+    <table class="table align-middle mb-0 cv-table">
+      <thead><tr><th scope="col">Leaf</th><th scope="col">Prediction</th><th scope="col">Confidence</th><th scope="col">Date</th><th scope="col" class="text-end">Actions</th></tr></thead>
+      <tbody>
+      {% for r in rows %}
+        <tr>
+          <td><img class="thumb" src="{{ url_for('static', filename='uploads/thumbs/' ~ r.scan.thumb) }}" alt="Thumbnail of scan {{ r.scan.id }}"></td>
+          <td>{{ r.name }}{% if r.scan.low_conf %} <span class="badge text-bg-warning">Low confidence</span>{% endif %}</td>
+          <td>{{ r.scan.confidence|pct }}</td>
+          <td class="text-nowrap">{{ r.scan.created_at|localtime }}</td>
+          <td class="text-end text-nowrap">
+            <a class="btn btn-sm btn-outline-cv" href="{{ url_for('results', scan_id=r.scan.id) }}">View</a>
+            <form method="post" action="{{ url_for('delete', scan_id=r.scan.id) }}" class="d-inline" onsubmit="return confirm('Delete this scan?');">
+              <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Result{% endblock %}
+{% block content %}
+<section class="container page">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="page-title mb-0">Scan result</h1>
+    <a class="btn btn-cv" href="{{ url_for('detect') }}"><i class="bi bi-arrow-repeat me-1"></i>Scan another plant</a>
+  </div>
+
+  <div class="alert alert-disclaimer" role="note">
+    <i class="bi bi-exclamation-triangle me-2"></i><strong>Preliminary result.</strong>
+    This prediction comes from an automated model and is not a substitute for diagnosis by a qualified agronomist or plant pathologist.
+  </div>
+  {% if scan.low_conf %}
+  <div class="alert alert-warning" role="alert"><strong>Low confidence.</strong> The model is not sure about this image. Try a clearer photo of a single leaf, and treat the result below with extra caution.</div>
+  {% endif %}
+  {% if scan.quality_note %}<div class="alert alert-warning" role="alert">{{ scan.quality_note }}</div>{% endif %}
+
+  <div class="row g-4">
+    <div class="col-md-5">
+      <img class="result-img" src="{{ url_for('static', filename='uploads/' ~ scan.filename) }}" alt="Uploaded leaf">
+      <p class="small text-muted-cv mt-2 mb-0"><i class="bi bi-clock me-1"></i>Scanned {{ scan.created_at|localtime }}</p>
+    </div>
+    <div class="col-md-7">
+      <div class="panel">
+        <p class="small text-muted-cv mb-1">{{ 'Most likely: healthy plant' if info.healthy else 'Most likely condition' }}</p>
+        <h2 class="result-name">{{ name }}</h2>
+        <div class="d-flex justify-content-between small mt-3"><span>Model confidence</span><strong>{{ scan.confidence|pct }}</strong></div>
+        <div class="progress mb-3" role="progressbar" aria-valuenow="{{ (scan.confidence*100)|round|int }}" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar" style="width: {{ (scan.confidence*100)|round(1) }}%"></div></div>
+        <h3 class="h6">Other possibilities</h3>
+        <ul class="list-unstyled small mb-0">
+          {% for t in top[1:] %}<li class="d-flex justify-content-between"><span>{{ t.name }}</span><span>{{ t.confidence|pct }}</span></li>{% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mt-1">
+    <div class="col-md-6"><div class="panel h-100">
+      <h2 class="h5">About this condition</h2>
+      <p class="mb-2">{{ info.description }}</p>
+      {% if info.found %}<p class="small text-muted-cv mb-0"><strong>Typical cause:</strong> {{ info.cause }}</p>{% endif %}
+    </div></div>
+    <div class="col-md-6"><div class="panel h-100">
+      <h2 class="h5">General care suggestions</h2>
+      <ul class="ps-3 mb-0">{% for t in info.tips %}<li class="mb-1">{{ t }}</li>{% endfor %}</ul>
+    </div></div>
+  </div>
+  <p class="small text-muted-cv mt-3">Reference text is general and qualified; see the sources on the <a href="{{ url_for('about') }}">About page</a>.
+    Inference: {{ scan.backend }}{% if scan.inference_ms %}, {{ '%.0f'|format(scan.inference_ms) }} ms{% endif %}.</p>
+</section>
+{% endblock %}

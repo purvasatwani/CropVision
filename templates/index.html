@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <h1 class="display-title">Protect Your Crops with AI-Powered Intelligence.</h1>
+        <p class="lead-copy">CropVision looks at a photo of a plant leaf and suggests whether it is healthy or shows signs of a disease. The model runs on your own device, so it keeps working in the field without an internet connection.</p>
+        <div class="d-flex flex-wrap gap-3 align-items-center">
+          <a class="btn btn-cv btn-lg" href="{{ url_for('detect') }}"><i class="bi bi-camera me-2"></i>Scan Your Plant</a>
+          <a class="btn btn-link link-cv" href="{{ url_for('about') }}">How it works</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <figure class="hero-art" aria-label="Illustration of a leaf inside a scanning frame">
+          <svg viewBox="0 0 520 460" role="img" aria-hidden="true">
+            <defs>
+              <linearGradient id="lf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2fa36b"/><stop offset="1" stop-color="#0f5c3a"/></linearGradient>
+              <clipPath id="frame"><rect x="70" y="40" width="380" height="330" rx="10"/></clipPath>
+            </defs>
+            <g stroke="#bfdcca" stroke-width="2" fill="none" opacity=".9">
+              <path d="M0 430 C120 392 240 410 520 372"/><path d="M0 446 C140 408 260 428 520 392"/><path d="M0 462 C160 424 280 446 520 412"/>
+            </g>
+            <g clip-path="url(#frame)">
+              <rect x="70" y="40" width="380" height="330" fill="#eaf5ee"/>
+              <path d="M130 330 C110 200 190 90 340 70 C400 150 380 280 250 340 C200 362 150 350 130 330Z" fill="url(#lf)"/>
+              <path d="M138 336 C200 250 270 160 338 80" stroke="#c8ecd7" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <g stroke="#a9dfc2" stroke-width="2.4" fill="none" stroke-linecap="round">
+                <path d="M190 280 C215 270 235 262 252 238"/><path d="M226 232 C248 232 268 218 286 190"/><path d="M262 188 C280 186 300 170 314 144"/>
+                <path d="M178 250 C165 228 175 205 200 190"/><path d="M214 206 C204 184 212 160 236 146"/>
+              </g>
+              <g fill="#7a4b1d" opacity=".85"><circle cx="292" cy="250" r="14"/><circle cx="318" cy="214" r="8"/><circle cx="238" cy="296" r="9"/></g>
+              <rect class="scan-line" x="70" y="40" width="380" height="3" fill="#7cf0b4"/>
+            </g>
+            <g stroke="#14442f" stroke-width="5" fill="none" stroke-linecap="round">
+              <path d="M70 80V40H110"/><path d="M410 40H450V80"/><path d="M70 330V370H110"/><path d="M410 370H450V330"/>
+            </g>
+          </svg>
+          <figcaption class="visually-hidden">Decorative illustration</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <h2 class="section-title">Built for the field, not just the lab</h2>
+    <div class="row g-4 mt-1">
+      {% set feats = [
+        ('bi-lightning-charge','Fast Detection','A compact MobileNetV3-Small model classifies a leaf in a fraction of a second on a laptop.'),
+        ('bi-cpu','Edge AI','Models convert to TensorFlow Lite so inference can run locally on a Raspberry Pi or Jetson-class device.'),
+        ('bi-hand-index-thumb','Farmer-Friendly Interface','Big buttons, one photo, one answer, with plain-language care guidance.'),
+        ('bi-clipboard2-pulse','Crop Health Insights','Every scan is saved to a history so you can track problems across plants and weeks.') ] %}
+      {% for icon, title, text in feats %}
+      <div class="col-md-6"><div class="feature">
+        <i class="bi {{ icon }}"></i><div><h3>{{ title }}</h3><p>{{ text }}</p></div>
+      </div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="container">
+    <h2 class="section-title text-white">How it works</h2>
+    <ol class="steps">
+      <li><h3>Capture</h3><p>Take a clear, close photo of one leaf in good light, or upload one you already have.</p></li>
+      <li><h3>Analyse on-device</h3><p>The leaf is resized and passed through the trained network. No image leaves your machine.</p></li>
+      <li><h3>Read the result</h3><p>You get the most likely condition, how sure the model is, and general care notes to discuss with an expert.</p></li>
+    </ol>
+  </div>
+</section>
+{% endblock %}

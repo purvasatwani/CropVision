@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock %}
+{% block content %}
+<section class="container page about">
+  <h1 class="page-title">About CropVision</h1>
+  <div class="row g-5">
+    <div class="col-lg-8">
+      <h2>The problem</h2>
+      <p>Plant diseases can reduce yield and quality, and early signs often show up on leaves. Many farmers have limited access to plant-pathology experts, so problems may be recognised late.</p>
+      <h2>Motivation</h2>
+      <p>CropVision explores whether a phone- or laptop-class device can give a fast first opinion from a leaf photo, helping a farmer decide whether to seek expert advice sooner.</p>
+      <h2>Lightweight deep learning</h2>
+      <p>The classifier uses transfer learning on MobileNetV3-Small, a network designed for mobile hardware. Pretrained ImageNet features are fine-tuned on labelled leaf images (PlantVillage), then converted to TensorFlow Lite with optional post-training quantisation to reduce size and latency.</p>
+      <h2>Edge-AI architecture</h2>
+      <p>Image capture, preprocessing, inference and storage all run on the same device: browser UI, Flask server, TFLite interpreter, SQLite history. Nothing is sent to a cloud service, so it can run on a Raspberry Pi or Jetson-class board once dependencies and model files are installed. Physical-device performance has to be measured on that hardware; see the README.</p>
+      <h2>Research gap</h2>
+      <p>Many published plant-disease models are evaluated only on controlled, lab-style images and are often presented as cloud services. This project focuses on a complete, offline-capable pipeline and on measuring size, latency and accuracy of the original versus optimised models.</p>
+      <h2>System workflow</h2>
+      <p class="mb-1">Photo → validation → centre-crop and resize to 224×224 → MobileNetV3-Small / TFLite → class probabilities → reference text → saved to scan history.</p>
+      <h2>Limitations</h2>
+      <ul>
+        <li>The model only knows the crops and diseases in its training data, and will still pick one of them for a non-leaf or unfamiliar image.</li>
+        <li>PlantVillage images are taken against plain backgrounds; accuracy in real fields is usually lower than on the held-out test split.</li>
+        <li>Near-duplicate photos of the same leaf in the dataset can make test scores optimistic.</li>
+        <li>Several conditions look alike and can be confused; symptoms can also come from nutrient or water stress.</li>
+        <li>The care notes are general and not treatment prescriptions. Consult an expert.</li>
+      </ul>
+    </div>
+    <aside class="col-lg-4">
+      <div class="panel">
+        <h2 class="h5">Dataset &amp; sources</h2>
+        <p class="small">Training data: PlantVillage leaf images. Check the licence of the copy you download (the TensorFlow Datasets catalogue lists it as CC0 1.0).</p>
+        <ul class="small ps-3 mb-0">{% for s in sources %}<li class="mb-2">{{ s }}</li>{% endfor %}</ul>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

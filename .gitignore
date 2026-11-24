@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.env
+database/*.db
+static/uploads/*
+!static/uploads/.gitkeep
+!static/uploads/thumbs/.gitkeep
+dataset/*
+!dataset/README.md
+models/*
+!models/README.md
+reports/*
+.pytest_cache/

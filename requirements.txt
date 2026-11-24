@@ -1,0 +1,14 @@
+# CropVision - tested with Python 3.12 (TensorFlow 2.16 supports Python 3.9-3.12).
+# Windows note: TensorFlow >= 2.11 has no native-Windows GPU support; CPU training works
+# but is slow. For fast training use Google Colab or WSL2 (see README).
+flask==3.0.3
+python-dotenv==1.0.1
+pillow==10.4.0
+numpy==1.26.4
+opencv-python-headless==4.10.0.84
+tensorflow==2.16.2
+scikit-learn==1.5.2
+matplotlib==3.9.2
+pytest==8.3.3
+# Optional, for Raspberry Pi / lightweight inference-only installs (replaces tensorflow):
+#   ai-edge-litert   (or tflite-runtime on older systems)

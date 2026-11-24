@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Disease Detection{% endblock %}
+{% block content %}
+<section class="container page">
+  <h1 class="page-title">Disease Detection</h1>
+  <p class="text-muted-cv">Upload or capture a photo of a single leaf. Use JPG, PNG or WebP up to {{ max_mb }} MB.</p>
+
+  {% if not model_status.available %}
+  <div class="alert alert-warning" role="alert">
+    <strong>Model inference is not configured.</strong> {{ model_status.error }}
+    Scans are disabled until a trained model is available (see README, "Train the model").
+  </div>
+  {% endif %}
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose or drop a leaf image">
+        <div id="dz-empty">
+          <i class="bi bi-cloud-arrow-up"></i>
+          <p class="mb-1 fw-semibold">Drag and drop a leaf photo here</p>
+          <p class="small text-muted-cv mb-3">or choose a file from your device</p>
+          <div class="d-flex flex-wrap gap-2 justify-content-center">
+            <button type="button" class="btn btn-outline-cv" id="btn-browse"><i class="bi bi-folder2-open me-1"></i>Browse files</button>
+            <button type="button" class="btn btn-outline-cv" id="btn-camera"><i class="bi bi-camera me-1"></i>Use camera</button>
+          </div>
+        </div>
+        <img id="preview" class="preview d-none" alt="Preview of the selected leaf">
+      </div>
+      <input type="file" id="file" class="d-none" accept="image/jpeg,image/png,image/webp">
+      <input type="file" id="file-camera" class="d-none" accept="image/*" capture="environment">
+      <div id="error" class="alert alert-danger mt-3 d-none" role="alert"></div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="panel">
+        <h2 class="h5">Ready to analyse</h2>
+        <p id="file-meta" class="text-muted-cv small">No image selected yet.</p>
+        <div class="d-grid gap-2">
+          <button id="btn-detect" class="btn btn-cv btn-lg" disabled>
+            <span class="spinner-border spinner-border-sm me-2 d-none" id="spinner" aria-hidden="true"></span>
+            <span id="detect-label">Detect Disease</span>
+          </button>
+          <button id="btn-clear" class="btn btn-link link-cv d-none">Choose a different photo</button>
+        </div>
+        <hr>
+        <h3 class="h6">Tips for a reliable result</h3>
+        <ul class="small text-muted-cv ps-3 mb-0">
+          <li>Photograph one leaf, filling most of the frame.</li>
+          <li>Use daylight and keep the leaf in focus.</li>
+          <li>A plain background works best.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal fade" id="camModal" tabindex="-1" aria-labelledby="camTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"><h2 class="modal-title h5" id="camTitle">Take a photo</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+      <div class="modal-body"><video id="cam" class="w-100 rounded" autoplay playsinline muted></video></div>
+      <div class="modal-footer"><button id="btn-snap" class="btn btn-cv"><i class="bi bi-camera me-1"></i>Capture</button></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/detect.js') }}" data-max-mb="{{ max_mb }}" data-enabled="{{ 'true' if model_status.available else 'false' }}"></script>{% endblock %}

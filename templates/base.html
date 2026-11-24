@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}CropVision{% endblock %} | CropVision</title>
+  <link rel="icon" href="{{ url_for('static', filename='images/leaf.svg') }}" type="image/svg+xml">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ url_for('static', filename='vendor/fonts/fraunces-latin-wght-normal.woff2') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/icons/bootstrap-icons.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cropvision.css') }}">
+</head>
+<body>
+<a class="visually-hidden-focusable skip" href="#main">Skip to content</a>
+<nav class="navbar navbar-expand-md cv-nav">
+  <div class="container">
+    <a class="navbar-brand cv-logo" href="{{ url_for('index') }}">
+      <img src="{{ url_for('static', filename='images/leaf.svg') }}" alt="" width="28" height="28"> CropVision
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav ms-auto gap-md-1">
+        {% set links = [('index','Home'),('detect','Disease Detection'),('history','Scan History'),('about','About')] %}
+        {% for ep, label in links %}
+        <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint == ep or (ep=='detect' and request.endpoint=='results') }}" href="{{ url_for(ep) }}">{{ label }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}<div class="container pt-3">
+      {% for cat, msg in messages %}<div class="alert alert-{{ 'success' if cat=='success' else 'warning' }} mb-2" role="status">{{ msg }}</div>{% endfor %}
+    </div>{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="cv-footer">
+  <div class="container d-flex flex-column flex-md-row justify-content-between gap-2">
+    <span>CropVision: college major project. Predictions are preliminary and do not replace expert diagnosis.</span>
+    <span>Runs locally. Images stay on this device.</span>
+  </div>
+</footer>
+<script src="{{ url_for('static', filename='vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

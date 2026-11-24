@@ -1,0 +1,9 @@
+{
+  "architecture": "MobileNetV3-Small (transfer learning)",
+  "input_size": 224,
+  "weights": "imagenet",
+  "num_classes": 38,
+  "trained_utc": "2026-11-04T17:38:29+00:00",
+  "tensorflow": "2.21.0",
+  "data_dir": "dataset/processed"
+}
